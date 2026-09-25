@@ -30,6 +30,23 @@ def list_entries(
     return PageResult(items=items, total=total, page=page, size=size)
 
 
+@router.get("/maintenance-due")
+def maintenance_due(
+    within_days: int | None = Query(default=None, description="仅看未来多少天内到期；缺省返回全部未到期记录"),
+) -> dict[str, Any]:
+    """检修到期视图：返回超期、近期到期、待补录三组；已更换设备不在其中。"""
+    if within_days is not None and within_days <= 0:
+        raise HTTPException(status_code=400, detail="天数必须大于 0")
+    return service.maintenance_due(within_days=within_days)
+
+
+@router.get("/export")
+def export_entries() -> dict[str, Any]:
+    """导出信号机清单：返回当前过滤条件下的全量数据。"""
+    items, total = service.list_entries(page=1, size=10000)
+    return {"module": "signal", "total": total, "items": items}
+
+
 @router.get("/{entry_id}", response_model=dict)
 def get_entry(entry_id: int) -> dict:
     """读取单条信号机明细；不存在时给出可读的错误说明。"""
@@ -56,10 +73,3 @@ def run_action(entry_id: int, payload: EntryPayload) -> ActionResult:
     if entry is None:
         return ActionResult(ok=False, message=message)
     return ActionResult(ok=True, message=message, entry=entry)
-
-
-@router.get("/export")
-def export_entries() -> dict[str, Any]:
-    """导出信号机清单：返回当前过滤条件下的全量数据。"""
-    items, total = service.list_entries(page=1, size=10000)
-    return {"module": "signal", "total": total, "items": items}
