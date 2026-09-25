@@ -33,3 +33,44 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .link { border: none; background: none; color: var(--brand); cursor: pointer; padding: 0; }
 .page-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .error-text { color: #b42318; }
+
+/* 视图切换：信号机列表 / 检修到期 */
+.view-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+.view-tabs button {
+  border: 1px solid var(--border); background: #fff; color: var(--muted);
+  border-radius: 6px 6px 0 0; padding: 8px 18px; cursor: pointer; font-size: 13px;
+}
+.view-tabs button.active { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 600; }
+
+/* 行选中与超期高亮：类挂在 tr 上，配合 :key（设备 id）与 data-code（设备编号），
+   排序、分页或刷新后都不会错位 */
+.table-wrap { background: #fff; border: 1px solid var(--border); border-radius: 8px; overflow: auto; margin-bottom: 12px; }
+.table-wrap .data-table { border: none; }
+.data-table tbody tr { cursor: pointer; }
+.data-table tbody tr:hover td { background: #f1f5f9; }
+.data-table tbody tr.row-selected,
+.data-table tbody tr.row-selected td { background: #e8f0fe; }
+.data-table tbody tr.row-selected td:first-child { box-shadow: inset 3px 0 0 var(--brand); }
+.data-table tbody tr.row-overdue td { background: #fdecec; }
+.data-table tbody tr.row-overdue.row-selected td { background: #f7d8d8; }
+.data-table tbody tr.row-today td { background: #fff7e8; }
+.data-table tbody tr.row-today.row-selected td { background: #fdeccb; }
+.data-table tbody tr.row-overdue.row-today td { background: #fdecec; }
+
+/* 到期徽标 */
+.due-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; white-space: nowrap; }
+.badge-overdue { background: #f4c4c4; color: #7a271a; font-weight: 600; }
+.badge-upcoming { background: #fde9c8; color: #92400e; }
+.badge-later { background: #e2e8f0; color: #475569; }
+.badge-missing { background: #ddd6fe; color: #5b21b6; }
+
+/* 到期视图分组标题与统计卡色调 */
+.section-title { font-size: 14px; margin: 8px 0 6px; display: flex; align-items: baseline; gap: 10px; }
+.title-count { font-size: 12px; color: var(--muted); font-weight: 400; }
+.stat-card.tone-danger .stat-value { color: #b42318; }
+.stat-card.tone-warn .stat-value { color: #b45309; }
+
+.due-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+.window-switch { display: flex; align-items: center; gap: 6px; }
+.window-switch .btn { padding: 4px 10px; font-size: 12px; }
+.window-hint, .window-label { font-size: 12px; color: var(--muted); }
